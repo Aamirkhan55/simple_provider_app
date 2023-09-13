@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:simple_provider_app/core/services/count_model.dart';
 
 class HomeScreen extends StatefulWidget {
   final String title;
@@ -9,17 +11,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Consumer<CountModel>(
+      builder: (context, value, child) => Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title:Text(widget.title),
@@ -31,17 +28,20 @@ class _HomeScreenState extends State<HomeScreen> {
           children: <Widget>[
             const Text('You have push this button many times:'),
             Text(
-              '$_counter',
+              value.count.toString(),
               style: Theme.of(context).textTheme.headlineMedium,
               ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () {
+          final counter = context.read<CountModel>();
+          counter.incrementCounter();
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
         ),
-    );
+    ));
   }
 }
